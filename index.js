@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
+const cv = require('./cv');
 const axios = require('axios');
 
 // ANSI escape codes for colors
@@ -32,75 +33,49 @@ const checkInternetConnectivity = async () => {
 };
 
 program
-    .version('1.0.0')
+    .version('2.0.0')
     // .command('info')
     .description('Display personal information')
     .action(async () => {
         try {
             if (await checkInternetConnectivity()) {
-                const response = await axios.get('https://raw.githubusercontent.com/muath-ye/muath-ye/master/cli.json');
+                const response = await axios.get('https://raw.githubusercontent.com/muath-ye/muath-ye/master/cv.json');
+                const cv = response.data;
                 // Loop through the content
-                response.data.content.forEach(function (item) {
-                    var label = item.label;
-                    var labelColor = item.labelColor;
-                    var value = item.value;
-                    var valueColor = item.valueColor;
-                    console.log(`${colors[labelColor]}${label}:${colors.reset}`, `${colors[valueColor]}${value}${colors.reset}`);
+                // Display content from cv in console with colors
+                Object.keys(cv).forEach(key => {
+                    if (Array.isArray(cv[key])) {
+                        console.log(`${colors.fgBlue}${colors.bright}${key}:${colors.reset}`);
+                        cv[key].forEach(item => {
+                            console.log(`  - ${colors.fgGreen}${JSON.stringify(item, null, 2)}${colors.reset}`);
+                        });
+                    } else if (typeof cv[key] === 'object') {
+                        console.log(`${colors.fgMagenta}${colors.bright}${key}:${colors.reset}`);
+                        Object.keys(cv[key]).forEach(subKey => {
+                            console.log(`  ${colors.fgCyan}${subKey}: ${colors.fgWhite}${cv[key][subKey]}${colors.reset}`);
+                        });
+                    } else {
+                        console.log(`${colors.fgYellow}${colors.bright}${key}:${colors.reset} ${colors.fgWhite}${cv[key]}${colors.reset}`);
+                    }
                 });
             } else {
-                const localData = {
-                    "content": [
-                        {
-                            "label": "name",
-                            "labelColor": "bright",
-                            "value": "Muath Alsowadi <muathye@gmail.com>",
-                            "valueColor": "fgGreen"
-                        },
-                        {
-                            "label": "title",
-                            "labelColor": "bright",
-                            "value": "Web developer",
-                            "valueColor": "fgYellow"
-                        },
-                        {
-                            "label": "github",
-                            "labelColor": "bright",
-                            "value": "https://github.com/muath-ye",
-                            "valueColor": "fgBlue"
-                        },
-                        {
-                            "label": "linkedIn",
-                            "labelColor": "bright",
-                            "value": "https://www.linkedin.com/in/muathye",
-                            "valueColor": "fgBlue"
-                        },
-                        {
-                            "label": "instagram",
-                            "labelColor": "bright",
-                            "value": "https://www.instagram.com/muathye",
-                            "valueColor": "fgBlue"
-                        },
-                        {
-                            "label": "stackOverflow",
-                            "labelColor": "bright",
-                            "value": "https://stackoverflow.com/users/11229804/muath-alsowadi",
-                            "valueColor": "fgBlue"
-                        },
-                        {
-                            "label": "Skills",
-                            "labelColor": "bright",
-                            "value": "PHP/Laravel, Javascript, Nodejs, Express, Vuejs, Reactjs, Bootstrap, Tailwindcss, CI/CD, TDD, Mysql, Sql Server, Gatsby, GraphQL, OOP, SCSS, Web Socket, Functional Programming, Reactive Programming, GitHub , Gitlab, Bitbucket, Git VCS, Trello, ClickUp, Jira",
-                            "valueColor": "fgYellow"
-                        }
-                    ]
-                };
+                const localData = cv;
                 console.log('No internet connection');
-                localData.content.forEach(function (item) {
-                    var label = item.label;
-                    var labelColor = item.labelColor;
-                    var value = item.value;
-                    var valueColor = item.valueColor;
-                    console.log(`${colors[labelColor]}${label}:${colors.reset}`, `${colors[valueColor]}${value}${colors.reset}`);
+                // Display content from cv in console with colors
+                Object.keys(cv).forEach(key => {
+                    if (Array.isArray(cv[key])) {
+                        console.log(`${colors.fgBlue}${colors.bright}${key}:${colors.reset}`);
+                        cv[key].forEach(item => {
+                            console.log(`  - ${colors.fgGreen}${JSON.stringify(item, null, 2)}${colors.reset}`);
+                        });
+                    } else if (typeof cv[key] === 'object') {
+                        console.log(`${colors.fgMagenta}${colors.bright}${key}:${colors.reset}`);
+                        Object.keys(cv[key]).forEach(subKey => {
+                            console.log(`  ${colors.fgCyan}${subKey}: ${colors.fgWhite}${cv[key][subKey]}${colors.reset}`);
+                        });
+                    } else {
+                        console.log(`${colors.fgYellow}${colors.bright}${key}:${colors.reset} ${colors.fgWhite}${cv[key]}${colors.reset}`);
+                    }
                 });
             }
         } catch (error) {
