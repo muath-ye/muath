@@ -1,13 +1,13 @@
 {
-  "name": "muath",
-  "version": "1.0.0",
+  "name": "about-muathye",
+  "version": "2.0.0",
   "description": "A brief about me ;)",
   "bin": {
     "muath": "index.js"
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Warning: no test specified\" && exit 0"
   },
   "repository": {
     "type": "git",
